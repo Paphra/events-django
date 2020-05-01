@@ -1,0 +1,107 @@
+<div class="col-md-3">
+  <div class="card shadow sidebar">  
+    <h5 class="text-center"><i>Filter By<i></h5>
+    <hr/>
+    <form action="{% url 'events:filter' %}" method="GET">
+      <div class="form-group input-group">
+        <label for="month" class="text-right form-control">
+          <small>Month</small></label>
+        <input type="hidden" value="{% if f_month %}{{f_month}}{% endif %}" id="f_month" />
+        <select name="month" id='month' class="form-control">
+        </select>
+      </div>
+      <div class="form-group input-group">
+        <label for="year" class="text-right form-control">Year</label>
+        <input name="year" class="form-control" 
+          type="number" onChange="getMonths()" id="year" min='2000'
+          value="{% if f_year %}{{f_year}}{% endif %}"/>
+      </div>
+      <button type="submit" class="btn btn-block btn-success">
+        Filter</button>
+    </form>
+    <hr/>
+    <ul class="nav flex-column">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle {% if atcategories %}active{% endif %}"
+          data-toggle="collapse" href="#categories" role="button" 
+          aria-haspopup="true" aria-expanded="false">Categories</a>
+        <div id="categories" calss="collapse show">
+          {% for category in categories %}
+            <a class="dropdown-item" 
+              href="{% url 'events:category' category.id %}">
+              {{category.name}} 
+              <span class="badge badge-danger">{{category.events.count}}</span>
+            </a>
+          {% endfor %}
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item {% if atcategories %}active{% endif %}"
+            href="{% url 'events:categories' %}">
+            All Categories <span class="badge badge-success">{{categories.count}}<span></a>
+        </div>
+      </li>
+      
+      <hr/>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle"
+          data-toggle="collapse" href="#time" role="button" 
+          aria-haspopup="true" aria-expanded="true">Periods</a>
+        <div id="time" class="collapse show">
+          <a class="dropdown-item" 
+            href="{% url 'events:next' 30 %}">Next 30 Days</a>
+          <a class="dropdown-item" 
+            href="{% url 'events:next' 90 %}">Next 3 Months</a>
+        </div>
+      </li>
+    </ul>
+    <hr/>
+    {% if partners %}
+      <div class="text-center">
+        <h5 class='text-center'><i>Partners</i></div>
+        {% for partner in partners %}
+          <a href="https://{{partner.website}}" target="_blank" class="text-center">
+            <div class="row">
+              <div class="col-4"></div>
+              <div class="col-4">
+                <img width="100%" src="data:image/jpg;base64,{{partner.image.data}}"
+                  class="rounded-circle" />
+              </div>
+              <div class="col-4"></div>
+              <small class="col-12">{{partner.name}}</small>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+      var date = new Date();
+      var year = date.getFullYear();
+      var c_month = date.getMonth();
+      var year_el = document.getElementById('year');
+      var f_month = document.getElementById('f_month').value;
+      if(year_el.value == ''){
+        year_el.value = year;
+      }
+      
+      var months = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+      var month_el = document.getElementById('month')
+      
+      getMonths();
+      function getMonths(){
+        var opts = "<option value='all'>All</option>";
+        month = 11
+
+        for(i=0; i<=month;i++){
+          var sel = '';
+          if (parseInt(f_month) == (i+1)){
+            sel = 'selected';
+          }
+          opts += "<option value='"+(i+1)+"' "+sel+">" + months[i]+"</option>";
+        }
+        month_el.innerHTML = opts;
+      }
+      
+</script>

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-9">
+			<h4><i><b>{{title}}</b></i> 
+				<span class="btn btn-{% if page_obj %}success{% else %}danger{% endif %}">
+					{% if page_obj %}{{page_obj.object_list.count}}{% else %}0{% endif %} Found
+				</span>
+			</h4>
+			<hr/>
+			{% if page_obj %}
+				{% for event in page_obj %}
+					{% include "events/event.html" %}
+				{% endfor %}
+			{% else %}
+				<p><i>There are No Events Found!</i></p>
+			{% endif %}
+			{% include "pagination.html" %}
+		</div>
+		{% include "sidebar.html" %}
+	</div>
+	
+{% endblock content %}

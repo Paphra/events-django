@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+		<div id="arrive"></div>
+		<div></div>
+		<div class="row">
+			<div class="col-md-9 shadow">
+				<h4><b>Events in <i>{{category.name}}</i></b></h4>
+				<hr/>
+				{% if page_obj %}
+					<ul class="list-unstyled">
+						{% for event in page_obj %}
+							{% include "events/event.html" %}
+						{% endfor %}
+					</ul>
+					{% include "pagination.html" %}
+				{% else %}
+					<p><i>There Are No Events In this Category</i></p>
+				{% endif %}
+			</div>
+			{% include "sidebar.html" %}
+		</div>
+		
+{% endblock content %}

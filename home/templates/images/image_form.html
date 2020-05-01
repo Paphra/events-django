@@ -1,0 +1,42 @@
+<div class="col-md-4">
+	<div class="card">
+		<div class="card-header">
+			<h4 class="card-title">{% if image %}Edit{% else %}Add{% endif %} An Image</h4>
+		</div>
+		<form enctype="multipart/form-data" method="POST">
+			{% csrf_token %}
+			<div class="card-body">
+				<div class="form-group">
+					<label for="title">Image Title</label>
+					<input type="text" id="title" name="title"
+						value="{% if image %}{{image.title}}{% endif %}"
+						class="form-control" />
+				</div>
+				<div class="form-group">
+					<label for="group">Image Group</label>
+					<select name="group" id="group" class="form-control"
+						require="true">
+						<option value="">-- Group --</option>
+						{% for group in groups %}
+							<option value="{{group.id}}"
+								{% if image %}{% if image.group.id == group.id %}selected{% endif %}{% endif %}>
+									{{group.name}}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="description">Image Description</label>
+					<textarea class="form-control" id="description" name="description"
+						rows="5" placeholder="Image Description">{% if image %}{{image.description}}{% endif %}</textarea>
+				</div>
+				<div class="form-group">
+					<label for="image">Image File</label>
+					<input type="file" id="image" name="image" class="form-control" />
+				</div>
+			</div>
+			<div class="card-footer text-right">
+				<button class="btn btn-primary" type="submit">Save</button>
+			</div>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,17 @@
+{% load crispy_forms_tags %}
+
+<div class="card shadow">
+	<div class="card-header">
+		<h5>Leave a Comment</h5>
+	</div>
+	<form action="#arrive" method='POST'>
+		<div class="card-body">
+			{{form | crispy}}
+			{% csrf_token %}
+		</div>
+		<div class=" card-footer text-right">
+			<button type="submit" class="btn btn-primary">Comment</button>
+		</div>
+			
+	</form>
+</div>

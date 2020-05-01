@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-3"></div>
+		<div class="col-6">
+			<div class="card border-success">
+				<div class="card-header">{{title}}</div>
+				<div class="card-body">
+					{% if subscribed %}
+						<div class="text-success">
+							<h5><b>Name:</b> <i>{{subscriber.name}}</i></h5>
+							<h5><b>Email:</b> <i>{{subscriber.email}}</i></h5>
+							<p style="padding:20px;">Thank You!! <br/>
+								<i>You have successfully joined our mailing list.<br/>
+								You will receive timely updates about the posts on this platform.</i>
+							</p>
+						</div>
+					</div>
+					<div class="card-footer text-right">
+						<form action="{% url 'index:unsubscribe' subscriber.id %}" method="POST">
+							{% csrf_token %}
+							<input type='hidden' name="subscriber" value="{{subscriber.id}}" />
+							<button type="submit" class="btn btn-danger" >Unsubscribe</button>
+						</form>
+					</div>
+					{% else %}
+						<div class="text-danger">
+							<h5><b>Name:</b> <i>{{subscriber.name}}</i></h5>
+							<h5><b>Email:</b> <i>{{subscriber.email}}</i></h5>
+							<p style="padding:20px;"><b clas="text-danger">Sorry To See you Go!!</b><br/>
+								<i>You have successfully unscribed from our mailing list.<br/>
+								You will nolonger receive timely updates about the posts on this platform.</i>
+							</p>
+						</div>
+					</div>
+					<div class="card-footer text-right">
+						<form action="{% url 'index:resubscribe' subscriber.id %}" method="POST">
+							{% csrf_token %}
+							<input type='hidden' name="subscriber" value="{{subscriber.id}}" />
+							<button type="submit" class="btn btn-success" >Resubscribe</button>
+						</form>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="col-3"></div>
+	</div>
+	
+{% endblock content %}

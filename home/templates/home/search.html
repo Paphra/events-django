@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-9">
+			<div id="arrive"></div>
+			<div></div>
+			<h6><b>{{title}} for</b> <i>"{{query}}"</i> under {{section}}</h6>
+			<hr/>
+
+			{% if page_obj %}
+				{% if atposts %}
+					{% for post in page_obj %}
+						{% include "posts/post.html" %}
+					{% endfor %}	
+				{% else %}
+					{% for question in page_obj %}
+						{% include "questions/question.html" %}
+					{% endfor %}	
+				{% endif %}
+				{% include "pagination.html" %}
+			{% else %}
+				<p><i>There are no Results Found!</i></p>
+			{% endif %}
+		</div>
+		{% include "sidebar.html" %}
+	</div>
+	
+{% endblock content %}

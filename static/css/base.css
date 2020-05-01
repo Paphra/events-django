@@ -1,0 +1,25 @@
+
+body{
+	background-color: #bbbbbb;
+}
+
+footer, .footer{
+	padding: 60px 10px;
+}
+
+#content {
+	padding: 30px 0px;
+}
+
+.sidebar{
+	padding: 5%;
+}
+
+.card-columns {
+  @include media-breakpoint-only(lg) {
+    column-count: 4;
+  }
+  @include media-breakpoint-only(xl) {
+    column-count: 5;
+  }
+}

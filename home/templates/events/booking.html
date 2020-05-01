@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+
+		<div class="row ">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<div class="card shadow">
+					<h4 class='card-header'>Book: {{event}}</h4>
+					<form action="{% url 'events:book' %}" method="post">
+						{% csrf_token %}
+						<input type="hidden" value="{{event.id}}" name="reference" />
+						<div class="card-body">
+							<div class="row">
+								<div class="form-group col-md-6">
+									<label for="first_name">First Name</label>
+									<input type="text" name="first_name" id="first_name" class="form-control"
+										placeholder="First Name" required />
+								</div>
+								<div class="form-group col-md-6">
+									<label for="lasst_name">Last Name</label>
+									<input type="text" name="lasst_name" id="last_name" class="form-control"
+										placeholder="Last Name" required />
+								</div>
+							</div>
+							<div class="row">
+								<div class="form-group col-md-6">
+									<label for="email">Email Address</label>
+									<input type="email" name="email" id="email" class="form-control"
+										placeholder="Email Address" required />
+								</div>
+								<div class="form-group col-md-6">
+									<label for="phone">Phone</label>
+									<input type="tel" name="phone" id="phone" class="form-control"
+										placeholder="Phone Number" required />
+								</div>
+							</div>
+							<div class="row">
+								<div class="form-group col-md-6">
+									<label for="seats">Number of Seats 
+										<span class="badge p-2 text-white bg-dark">
+											<i class="fas fa-chevron-left"></i> {{event.seats|add:'1'}}
+									</label>
+									<input type="number" name="seats" id="seats" onChange="getAmount()" class="form-control"
+										placeholder="Number Of Seats" max="{{event.seats}}" min="1" required />
+								</div>
+								<div class="form-group col-md-6">
+									<label for="amount">Amount 
+										<span class="badge text-white p-2 bg-{% if event.discount %}success{% else %}danger{% endif %}">
+											{{event.discount}}% Discount
+										</span>
+									</label>
+									<input type="hidden" value="{{event.discount}}" id="discount" />
+									<input type="hidden" value="{{event.amount}}" id="o_amount" />
+									<input type="number" name="amount" id="amount" class="form-control"
+										placeholder="Total Amount" readonly required />
+								</div>
+							</div>
+						</div>
+						<div class="card-footer text-right">
+							<a href="{% url 'events:detail' event.slug %}" class="btn btn-primary">
+								<span class='fas fa-chevron-left'> </span> Go Back
+							</a>
+							<button type="submit" role="button" class="btn btn-outline-success">
+								Book
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+		
+		<script>
+			var o_amount = parseInt(document.getElementById('o_amount').value);
+      var el_amount = document.getElementById('amount');
+      var discount = parseInt(document.getElementById('discount').value);
+      var el_seats = document.getElementById('seats');
+      
+			el_seats.value = 1;
+      el_amount.value = o_amount - (o_amount * (discount / 100));
+
+			function getAmount(){
+        var seats = parseInt(el_seats.value);
+				var tt = seats * o_amount;
+				var disc = tt * (discount / 100);
+        el_amount.value = tt - disc
+      }
+  
+		</script>
+{% endblock content %}

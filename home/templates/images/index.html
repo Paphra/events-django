@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+
+		<div class="row">
+			<div class="col-md-8">
+				<h4><i><b>Image Groups</b></i></h4>
+				<hr/>
+				{% if groups.count %}
+					<ul class="list-group">
+						{% for group in groups %}
+							<li class="list-group-item">
+								{{group.name}}
+								{% if group.images.count %}
+									<p>
+										<i><b>{{ group.images.count }} image{{ group.images.count|pluralize }}</b> in this Group</i>
+									  <a href="{% url 'events:images_group' group.id %}"
+											class="btn btn-primary btn-sm">View</a>
+									</p>
+								{% else %}
+									<p><i>There are No Images in </i><b>{{ group.name }}</b></p>
+								{% endif %}
+							</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<p><i>There are No Image Groups.<br/>
+						Please, go to Admin Dashboard and Add Some Groups.</i></p>
+				{% endif %}
+				<hr/>
+			</div>
+			{% include "images/image_form.html" %}
+		</div>
+		
+{% endblock content %}

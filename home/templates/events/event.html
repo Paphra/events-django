@@ -1,0 +1,38 @@
+<li class="media card shadow">
+	
+	<h4 class="card-header">{{event.title}}</h4>
+	<div class="row">
+		<div class="col-md-5 text-center">
+			<img class="rounded" width="100%" src="data:image/jpg;base64,{{event.image.data}}" />
+		</div>
+		<div class="media-body col-md-7">
+			<div class="card">
+				<div class="card-body">
+					<small class="card-text">{{event.content|safe|truncatechars_html:100}}</small>
+					<b>{{event.seats}} Seat{{event.seats|pluralize}} Left</b> 
+					{% if event.discount %}
+						<span class="badge text-white p-2 bg-success">
+							{{event.discount}}% Discount
+						</span>
+					{% else %}
+					{% endif %}
+				</div>
+				<div class="card-footer">
+					<div class="row">
+						<div class="col-md-7">
+							<i><b>@ {{ event.location }}</i></b><br/>
+							<small>Starts: {{event.starts_on}}</small><br/>
+							<small>Ends: {{event.ends_on}}</small>
+						</div>
+						<div class="col-md-5">
+							<a class="btn btn-primary" href="{% url 'events:detail' event.slug %}">View</a>
+							<a class="btn btn-outline-success {% if event.seats == 0 %}disabled{% endif %}"
+								href="{% url 'events:booking' event.id %}">Book</a>
+						</div>
+					</div>
+				</div>
+			</div>		
+		</div>
+	</div>
+</li>
+<hr/>

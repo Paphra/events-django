@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-9">
+			<div class="card shadow">
+				<h4 class="card-header"><i><b>All Categories</b></i></h4>
+				<div class="card-body">
+					{% if categories.count %}
+						<div class="card-columns">
+							{% for category in categories %}
+								<div class="card card-column card-boarder border-danger">
+									<h4 class="card-header">{{category.name}}</h4>
+									<div class="card-body">
+										<span class="badge badge-danger">{{category.events.count}}</span>
+										Event{{category.events.count|pluralize}}
+										<a class="btn btn-outline-success" 
+											href="{% url 'events:category' category.id %}">View All
+										</a>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					{% else %}
+						<p><i>There are No Categories</i></p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		{% include "sidebar.html" %}
+	</div>
+	
+{% endblock content %}

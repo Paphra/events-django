@@ -1,0 +1,27 @@
+<div class="card border-success shadow">
+	<img class="card-img-top" src="data:image/jpg;base64,{{ event.image.data}}" alt="Logo"/>
+	<div class="card-body">
+		<h5 class="card-title">{{ event.title }}</h5>
+		<p><b>@ {{event.location}}</b></p>
+		<p>
+			<b><span class="fas fa-money-check-alt"></span> UGX {{event.amount}}</b> 
+			{% if event.discount %}
+				<span class="badge text-white p-2 bg-success">
+					{{event.discount}}% Discount
+				</span>
+			{% endif %}
+		</p>
+		<p><b>{{event.seats}}</b> Seat{{event.seats|pluralize}} left</p>
+	</div>
+	<div class="card-footer border-success">
+		<div class="row">
+			<div class="card-text col-8">
+				<small class="text-muted">{{ event.starts_on}}</small> <b>to</b>
+				<small class="text-muted">{{ event.ends_on}}</small>
+			</div>
+			<div class="col-4">
+				<a class="btn btn-primary" href="{% url 'events:detail' event.slug %}">More</a>
+			</div>
+		</div>
+	</div>
+</div>

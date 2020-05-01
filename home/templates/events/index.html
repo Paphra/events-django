@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+		<div id="arrive"></div>
+		<div></div>
+		<h4><i><b>{{title}}</b></i></h4>
+		<hr/>
+		<div class="row">
+			<div class="col-md-9 shadow">
+				{% if page_obj %}
+					<ul class="list-unstyled">
+						{% for event in page_obj %}
+							{% include "events/event.html" %}
+						{% endfor %}
+					</ul>
+					{% include "pagination.html" %}
+				{% else %}
+					<p><i>There are no Events</i></p>
+				{% endif %}
+			</div>
+			{% include "sidebar.html" %}
+		</div>
+
+{% endblock content %}

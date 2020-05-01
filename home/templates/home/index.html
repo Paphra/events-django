@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+		<div class="row">
+			<div class="col-md-9">
+
+				<h4><i><b>Upcoming Events</b></i></h4>
+				<hr/>
+				{% if upcoming %}
+					<div class="card-columns">
+						{% for event in upcoming %}
+							{% include "events/column.html" %}
+						{% endfor %}
+					</div>
+					
+					<hr/>
+					<div class="text-center">
+						<a href="{% url 'events:upcoming' %}" class="btn btn-primary">All Upcoming Events</a>
+					</div>
+				{% else %}
+					<p><i>There are no Latest Events</i></p>
+				{% endif %}
+
+				<div>
+					<h4><i><b>Finished Events</b></i></h4>
+					<hr/>
+					{% if finished %}
+						<div class="row card-columns">
+							{% for event in finished %}
+								{% include "events/column.html" %}
+							{% endfor %}
+						</div>
+						<hr/>
+						<div class="text-center">
+							<a href="{% url 'events:history' %}" class="btn btn-primary">All Finished Events</a>
+						</div>
+
+					{% else %}
+						<p><i>There are no Finished Events</i></p>
+					{% endif %}
+				</div>
+
+			</div>
+
+			{% include "sidebar.html" %}
+
+		</div>
+{% endblock content %}

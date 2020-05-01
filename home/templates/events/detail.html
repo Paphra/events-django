@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+		<div class="row">
+			<div class="col-md-9">
+				<h4><i><b>{{event.title}}</b></i></h4>
+				<hr/>
+				<div class="row">
+					<div class="col-md-9">
+						<img class="rounded img-responsive" width="100%" 
+							src="data:image/jpg;base64,{{event.image.data}}" />
+					</div>
+					<div class="col-md-3">
+						<div class="card shadow">
+							<div class="row card-body">
+								<div class="col-md-12">
+									<small>Starts: <strong>{{event.starts_on}}</strong></small><br/>
+									<small>Ends: <strong>{{event.ends_on}}</strong></small>
+									<hr/>
+								</div>
+								<div class="col-3 col-md-12">
+									<p><b><span class="fas fa-money-check-alt"></span> UGX {{event.amount}}</b></p>
+									<p><b>{{event.seats}}</b> Seat{{event.seats|pluralize}} left</p>
+								</div>
+								<div class="col-9 col-md-12">
+									<p><strong>@</strong> 
+									{{event.location}}</p>
+								</div>
+								<div class="col-md-12">
+									<hr/>
+									<a href="{% url 'events:booking' event.id %}" 
+										class="btn btn-outline-success btn-md {% if event.seats == 0 %}disabled{% endif %}">
+										Book Ticket <span class="fas fa-money-check"></span></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr/>
+				<div class="card shadow" style="padding:10px">
+					<div class="card-body">
+						{{event.content | safe}}
+					</div>
+					<div class="card-footer">
+							<div class="row">
+								<div class="col-md-8">
+									<p>Starts: <strong>{{event.starts_on}}</strong></p>
+									<p>Ends: <strong>{{event.ends_on}}</strong></p>
+								</div>
+								<div class="col-md-4">
+									<p><b><span class="fas fa-money-check-alt"></span> UGX {{event.amount}}</b></p>
+									<p><b>{{event.seats}}</b> Seat{{event.seats|pluralize}} left</p>
+								</div>
+								<div class="col-md-8">
+									<p><strong>@</strong> 
+									{{event.location}}</p>
+								</div>
+								<div class="col-md-4">
+									<a href="{% url 'events:booking' event.id %}" 
+										class="btn btn-outline-success btn-md {% if event.seats == 0 %}disabled{% endif %}">
+										Book Ticket <span class="fas fa-money-check"></span></a>
+								</div>
+							</div>
+					</div>
+				</div>
+				
+				<div id="arrive"></div>
+				<div></div>
+				<hr/>
+				<div class="comment">
+					{% if page_obj %}
+						<h4><i>{{page_obj.object_list.count}} Comment{{page_obj.object_list.count|pluralize}}</i></h4>
+						{% for comment in page_obj %}
+							{% include "comments/comment.html" %}
+						{% endfor %}
+						
+						{% include "pagination.html" %}
+					{% else %}
+						<p class="text-center">No Comments</p>
+					{% endif %}
+					<hr/>
+					{% if new_comment %}
+						<div class="alert alert-success text-center">
+							<p><i>Your Comment is Awaiting moderation</i></p>
+						</div>
+					{% else %}
+						{% include "comments/form.html" %}
+					{% endif %}
+				</div>
+				<hr/>
+			</div>
+			{% include "sidebar.html" %}
+		</div>
+		
+{% endblock content %}

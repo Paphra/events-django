@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+
+		<div class="card shadow">
+			<div  class="row card-body">
+				<div class="col-md-8 text-center">
+					<h4 class="card-header">Current Image</h4>
+					<img src="data:image/jpg;base64,{{image.data}}" alt="{{image.title}}"
+						class="rounded" width="80%"/>
+					<hr/>
+				</div>
+				{% include "images/image_form.html" %}
+			</div>
+			<div class='card-footer text-center'>
+				
+				<a href="{% url 'events:images_group' image.group.id %}" class="btn btn-primary">
+					<span class="fas fa-chevron-left"></span> Back to Group
+				</a>
+				<a href="{% url 'events:images' %}" class="btn btn-success">
+					All Images <span class="fas fa-image"></span>
+				</a>
+			</div>
+		</div>
+		
+		
+{% endblock content %}

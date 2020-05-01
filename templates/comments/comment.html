@@ -1,0 +1,29 @@
+{% load static %}
+<div class="card shadow">
+	<div class="row card-body">
+		<div class="col-md-4">
+			<div class="row">
+				<div class="col-5">
+					<img src="
+					{% if c_user.email == comment.email %}
+						data:image/jpg;base64,{{c_user.profile.image.data}}
+					{% else %}
+						{% static 'images/user.jpg' %}
+					{% endif %}" 
+						width="100%" class="rounded-circle"/>
+				</div>
+				<div class="col-7">		
+					<small>{{comment.name}}</small><br/>
+					<small>{{comment.email}}</small>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<p class="card-text">{{comment.body|safe}}</p>
+		</div>
+	</div>
+	<div class="card-footer">
+		<small class="text-muted">{{comment.created_on}}</small>
+	</div>
+</div>
+<hr/>

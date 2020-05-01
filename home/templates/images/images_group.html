@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+		<div class="row">
+			<div class="col-md-8">
+				<h4><i><b>Images in {{ group.name }}</b></i></h4>
+				<hr/>
+				{% if page_obj %}
+					<div class="card-columns">
+						{% for image in page_obj %}
+							<div class="card">
+								<div class="card-header">
+									<h5 class="card-title">{{ image.title }}</h5>
+								</div>
+								<div class="card-body">
+									<img width="100%" class="rounded" 
+										src="data:image/jpg;base64,{{ image.data }}" alt="{{image.title}}" />
+								</div>
+								<div class="card-footer">
+									<a href="{% url 'events:image_detail' image.id %}"
+										class="btn btn-primary btn-block">View</a>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+					{% include "pagination.html" %}
+				{% else %}
+					<p><i>There are no Images in this Group</i></p>
+				{% endif %}
+				<div class='text-center'>
+					<a href="{% url 'events:images' %}" class="btn btn-success">
+						All Images <span class="fas fa-image"></span>
+					</a>
+				</div>
+			</div>
+			<hr/>
+			{% include "images/image_form.html" %}
+		</div>
+		
+{% endblock content %}

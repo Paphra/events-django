@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+		<div class='card shadow'>
+			<div class="card-header">
+				<h4><i><b>{{title}}</b></i></h4>
+				<h5>{{about.site_title}}</h5>
+			</div>
+			<div class="card-body"
+				style="padding-left:5%; padding-right:5%;">
+				{{about.info|safe}}
+			</div>
+		</div>
+		<hr/>
+
+	{% if partners %}
+		<h5 class="text-center"><i><b>Our Partners</b></i></h5>
+		<hr/>
+		<div class="card-columns">
+			{% for partner in partners %}
+				<div class="card">
+					<div class="card-header">
+						<h5 class="card-title">{{ partner }}</h5>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-4">
+								<img width="100%" class="rounded" 
+									src="data:image/jpg;base64,{{ partner.image.data }}" alt="{{partner}}" />
+							</div>
+							<div class="col-8">
+								<div class="card-text">
+									{{partner.description|safe}}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-footer">
+						<small>
+							<a href="https://{{partner.website}}" class="btn btn-primary btn-sm" target="_blank">Website</a>
+							<a href="tel:{{partner.phone}}" class="btn btn-primary btn-sm" target="_blank">Phone</a>
+							<a href="mailto:{{partner.email}}" class="btn btn-primary btn-sm" target="_blank">Email</a>
+						</small>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+
+	{% endif %}
+
+{% endblock content %}
