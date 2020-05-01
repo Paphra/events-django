@@ -203,12 +203,12 @@ PESAPAL_TRANSACTION_MODEL = 'django_pesapal.Transaction'
 ALLOWED_HOSTS = [
     '0.0.0.0', 'localhost', 
     '127.0.0.1', 
-    'events.herokuapp.com'
+    'ultimatesports.herokuapp.com'
 ]
 
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-#DEBUG = False
+DEBUG = False
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
