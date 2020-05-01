@@ -29,7 +29,7 @@ urlpatterns = [
     
     path('', include('home.urls')),
     path('summernote/', include('django_summernote.urls')),
-    path('payments/', include('django_pesapal.urls')),
+    #path(r'^payments/', include('django_pesapal.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
 
 ]

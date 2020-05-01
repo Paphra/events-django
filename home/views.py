@@ -427,25 +427,6 @@ def category(request, pk):
 	
 	return render(request, template_name, context)
 
-from django_pesapal.views import PaymentRequestMixin
-
-class PaymentView(PaymentRequestMixin):
-
-  def get_pesapal_payment_iframe(self):
-    '''
-    Authenticates with pesapal to get the payment iframe src
-    '''
-    order_info = {
-      'first_name': self.request.POST['first_name'],
-      'last_name': self.request.POST['last_name'],
-  	  'amount': self.request.POST['amout'],
-      'description': self.request.POST['description'],
-      'reference': self.request.POST['event'],  # some object id
-      'email': self.request.POST['email'],
-    }
-
-    iframe_src_url = self.get_payment_url(**order_info)
-    return iframe_src_url
 
 def booking(request, pk):
 	template = "events/booking.html"

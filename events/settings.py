@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import dj_database_url
-import django_pesapal
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,14 +34,12 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
     'crispy_forms',
-    'django_pesapal',
 ]
 
 MIDDLEWARE = [
@@ -175,6 +172,9 @@ SUMMERNOTE_CONFIG = {
 
 # PesaPal
 #====
+
+INSTALLED_APPS += ('django_pesapal',)
+
 PESAPAL_CONSUMER_KEY = 'oGQJZ1Ew1MDw4MSoyYv0mgZVhxSBMXCn'
 PESAPAL_CONSUMER_SECRET = 'bYrfSMxFGNUWEZ7DUzw3fX9KHY4='
 
@@ -209,6 +209,6 @@ ALLOWED_HOSTS = [
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-#DEBUG = False
+DEBUG = False
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
