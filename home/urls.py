@@ -34,7 +34,8 @@ urlpatterns = [
 		path('events/<slug:slug>/', views.detail, name='detail'),
 		path('events/next/<int:days>/', views.next, name='next'),
 
-		path('book', views.upcoming, name="book"),
+		path('book', views.book, name="book"),
+		path('booking', views.book_status, name="book_status"),
 		path('booked', views.booked, name="booked"),
 		path('bookfail', views.book_fail, name="book_fail"),
 

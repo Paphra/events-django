@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -189,34 +190,47 @@ class Comment(models.Model):
 	def __str__(self):
 		return 'Comment on {} by {}'.format(self.event, self.name)
 
-PAY_STATUS = (
-	(0, 'Unpaid'),
-	(1, 'Paid'),
+PESAPAL_STATUS_CHOICES = (
+	('PENDING', 'Pending'),
+	('COMPLETED', 'Completed'),
+	('FAILED', 'Failed'),
+	('INVALID', 'Invalid'),
 )
-
+  
 CLEARANCE = (
 	(0, 'Uncleared'),
 	(1, 'Cleared')
 )
 
 class Booking(models.Model):
-	first_name = models.CharField(max_length=50)
-	last_name = models.CharField(max_length=50)
-	email = models.EmailField(max_length=100)
-	description = SummernoteTextField()
-	reference = models.IntegerField()
-
-	amount = models.IntegerField(default=0)
+	event = models.ForeignKey(
+		Event, on_delete=models.SET_NULL, null=True)
+	FirstName = models.CharField(max_length=50)
+	LastName = models.CharField(max_length=50)
+	Email = models.EmailField(max_length=100)
+	PhoneNumber = models.CharField(max_length=20)
+	Description = SummernoteTextField()
+	
+	Amount = models.IntegerField(default=0)
 	seats = models.IntegerField(default=1)
 	discount = models.IntegerField(default=0)
-
-	payment_status = models.IntegerField(choices=PAY_STATUS, default=0)
-	clearance = models.IntegerField(choices=CLEARANCE, default=0)
-
-	ticket = models.CharField(max_length=15, blank=True)
+	ticket_no = models.CharField(max_length=15, blank=True)
 	
 	created_on = models.DateTimeField(auto_now_add=True)
 	updated_on = models.DateTimeField(auto_now=True)
+	
+	tracking_id = models.CharField(max_length=50, 
+		verbose_name='Pesapal Transaction Tracking ID', blank=True)
+	Reference = models.CharField(max_length=50, 
+		verbose_name='Pesapal Merchant Reference')
+	status = models.CharField(max_length=9, 
+		choices=PESAPAL_STATUS_CHOICES, default='PENDING')
+	clearance = models.IntegerField(choices=CLEARANCE, default=0)
+	seats_effected = models.BooleanField(default=False)
+
+	class Meta:
+		verbose_name = 'Pesapal Payment'
+		verbose_name_plural = 'Pesapal Payments'
 
 	def __str__(self):
-		return self.email
+		return "{} {} @ {}".format(self.FirstName, self.LastName, self.Email)

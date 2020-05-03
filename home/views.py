@@ -1,20 +1,37 @@
 import base64
 import datetime
+import random
+import requests
 
 from django.utils import timezone
 from django.views import generic
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, HttpResponse
+from django.shortcuts import (render, get_object_or_404, HttpResponseRedirect, HttpResponse)
 from django.core.paginator import (Paginator, PageNotAnInteger, EmptyPage)
 from django.contrib.auth.models import Group, User
 
+from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.postgres.search import SearchQuery, SearchVector
 
-from .models import Image, ImageGroup, Category, Subscriber, About, Partner, Event
+from .models import Image, ImageGroup, Category, Subscriber, About, Partner, Event, Booking
 from .forms import CommentForm
 
+from urllib.parse import quote, urlencode
+from oauthlib import oauth1
+
+import xml.etree.ElementTree as etree
+from cgi import escape
+
+# Constants given by service provider
+CONSUMER_KEY = settings.PESAPAL_CONSUMER_KEY
+CONSUMER_SECRET = settings.PESAPAL_CONSUMER_SECRET
+CALLBACK = settings.PESAPAL_CALLBACK
+
+# Values that choose client application
+IFRAME_LINK = settings.PESAPAL_IFRAME_LINK
+QUERY_STATUS = settings.PESAPAL_QUERY_STATUS_LINK
 
 def set_context(request, context, search=True):
 	context['user'] = request.user
@@ -429,7 +446,7 @@ def category(request, pk):
 
 
 def booking(request, pk):
-	template = "events/booking.html"
+	template = "booking/index.html"
 	event = get_object_or_404(Event, pk=pk)
 
 	context = {
@@ -442,8 +459,152 @@ def booking(request, pk):
 
 	return render(request, template, context)
 
+
 def book(request):
-	return HttpResponse(request)
+	"""
+	Booking Zone
+	"""
+	
+	if request.method == 'POST':
+		event_id = request.POST.get('event_id', '')
+		event = get_object_or_404(Event, id=event_id)
+		amount = int(request.POST.get('amount', 0))
+
+		#client = pesapal.PesaPal(oauth_consumer_key, oauth_consumer_secret, True)
+		request_data = {
+			'Amount': str(amount),
+			'FirstName': request.POST.get('first_name', 'First Name'),
+			'LastName': request.POST.get('last_name', 'Last Name'),
+			'PhoneNumber': request.POST.get('phone', '+2567000004444'),
+			'Description': 'Booking event: %s' % event.title,
+			'Reference': str(datetime.datetime.now()),
+			'Email': request.POST.get('email', 'mail@example.com'),
+
+		}
+		bookings = Booking.objects.filter(
+			Email=request_data['Email'], Description=request_data['Description'],
+			PhoneNumber=request_data['PhoneNumber'], FirstName=request_data['FirstName'],
+			LastName=request_data['LastName'], event=event)
+
+		if bookings:
+			booking = bookings[0]
+			request_data['Reference'] = booking.Reference			
+		else:
+			booking = Booking(**request_data)
+			booking.event = event
+			booking.discount = event.discount
+			booking.seats = request.POST.get('seats', 1)
+
+			booking.save()
+	
+		request_data['Type'] = 'MERCHANT'
+		request_data['Currency'] = ''
+		request_data['LineItems'] = [
+			{
+				'UniqueId': str(event.id),
+				'Particulars': event.title,
+				'Quantity': str(booking.seats),
+				'UnitCost': str(event.amount),
+				'SubTotal': str(booking.Amount)
+			}
+		]
+
+		root_xml = etree.Element('PesapalDirectOrderInfo')
+		root_xml.attrib['xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
+		root_xml.attrib['xmlns:xsd'] = 'http://www.w3.org/2001/XMLSchema'
+		root_xml.attrib['xmlns:xs'] = 'http://www.w3.org/2001/XMLSchema'
+		root_xml.attrib['xmlns'] = 'http://www.pesapal.com'
+
+    # populate line items
+		line_items = request_data.pop('LineItems')
+		if len(line_items) > 0:
+			line_items_xml = etree.SubElement(root_xml, 'LineItems')
+			for item in line_items:
+				item_xml = etree.SubElement(line_items_xml, 'LineItem')
+				item_xml.attrib.update(item)
+
+    # populate info
+		root_xml.attrib.update(request_data)
+		pesapal_request_data = etree.tostring(root_xml)
+
+		# Note, no auth token is present
+		params = [
+			('oauth_callback', CALLBACK),
+			('pesapal_request_data', pesapal_request_data)
+		]
+
+		url = "?".join((IFRAME_LINK, urlencode(params)))
+		client = oauth1.Client(
+			CONSUMER_KEY, CONSUMER_SECRET, 
+			signature_type = oauth1.SIGNATURE_TYPE_QUERY)
+		uri, header, body = client.sign(url)
+		
+		#print(uri)
+		template = "booking/checkout.html"
+		context = {
+			'title': 'Booking An Event',
+			'amount': amount,
+			'event': event,
+			'booking': booking,
+			'iframe_url': uri
+		}
+
+		set_context(request, context, False)
+		return render(request, template, context)
+
+	else:
+		return HttpResponseRedirect(reverse('events:index'))
+
+def book_status(request):
+	"""
+	Handle the callback from pesapal
+	"""
+	tracking_id = request.GET.get('pesapal_transaction_tracking_id', '')
+	reference = request.GET.get('pesapal_merchant_reference', '')
+	booking = Booking.objects.filter(Reference=reference)[0]
+	
+	params = None
+	if tracking_id and reference:
+		params = (
+			('pesapal_merchant_reference', reference),
+			('pesapal_transaction_tracking_id', tracking_id)
+		)
+		
+	url = "?".join((QUERY_STATUS, urlencode(params)))
+	client = oauth1.Client(
+		CONSUMER_KEY, CONSUMER_SECRET, 
+		signature_type = oauth1.SIGNATURE_TYPE_QUERY)
+	uri, header, body = client.sign(url)
+	res = requests.get(uri)
+	status = res.text.split('=')[1].split(',')[2]
+	
+	if booking:
+		ticket = ''
+		if booking.ticket_no:
+			ticket = booking.ticket_no
+		else:
+			for i in range(0, 15):
+				ticket += str(random.randint(0, 9))
+
+		booking.tracking_id = tracking_id
+		booking.status = status
+		booking.ticket_no = ticket
+		booking.save()
+
+		if booking.seats_effected == False:
+			booking.event.seats -= booking.seats
+			booking.event.save()
+		booking.seats_effected = True
+		booking.save()
+
+	template = 'booking/status.html'
+	context = {
+		'title': 'Booking Status',
+		'booking': booking
+	}
+
+	set_context(request, context, False)
+	return render(request, template, context)
 
 def booked(request):
 	return HttpResponse(request)

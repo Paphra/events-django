@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<div class="card shadow">
+				<h4 class="card-header">Transaction <i>{{ booking.status }}</i></h4>
+				<div class="card-body">
+					<p class="card-text">{{ booking.Description }}</p>
+					<h6>Your Ticket Number is <b>{{booking.ticket_no}}</b></h6>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+{% endblock content %}

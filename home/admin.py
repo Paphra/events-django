@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django_summernote.admin import SummernoteModelAdmin
 from django_summernote.admin import SummernoteModelAdmin
 
-from .models import Event, Comment, Subscriber, About, Partner
+from .models import Event, Comment, Subscriber, About, Partner, Booking
 from .models import Category, ImageGroup, Profile, Image, Location
 
 
@@ -76,3 +76,10 @@ class PartnerAdmin(admin.ModelAdmin):
 admin.site.register(Partner, PartnerAdmin)
 
 admin.site.register(Location)
+
+class BookingAdmin(admin.ModelAdmin):
+	list_display = ('FirstName', 'LastName','Email', 'PhoneNumber', 'ticket_no', 'status', 'created_on')
+	search_fields = ['FirstName', 'LastName', 'Email', 'PhoneNumber', 'ticket_no']
+	list_filter = ['status', 'created_on']
+	
+admin.site.register(Booking, BookingAdmin)

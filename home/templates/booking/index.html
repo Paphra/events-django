@@ -8,7 +8,7 @@
 					<h4 class='card-header'>Book: {{event}}</h4>
 					<form action="{% url 'events:book' %}" method="post">
 						{% csrf_token %}
-						<input type="hidden" value="{{event.id}}" name="reference" />
+						<input type="hidden" value="{{event.id}}" name="event_id" />
 						<div class="card-body">
 							<div class="row">
 								<div class="form-group col-md-6">
@@ -17,8 +17,8 @@
 										placeholder="First Name" required />
 								</div>
 								<div class="form-group col-md-6">
-									<label for="lasst_name">Last Name</label>
-									<input type="text" name="lasst_name" id="last_name" class="form-control"
+									<label for="last_name">Last Name</label>
+									<input type="text" name="last_name" id="last_name" class="form-control"
 										placeholder="Last Name" required />
 								</div>
 							</div>

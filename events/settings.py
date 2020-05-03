@@ -173,29 +173,23 @@ SUMMERNOTE_CONFIG = {
 # PesaPal
 #====
 
-INSTALLED_APPS += ('django_pesapal',)
-
-PESAPAL_CONSUMER_KEY = 'oGQJZ1Ew1MDw4MSoyYv0mgZVhxSBMXCn'
-PESAPAL_CONSUMER_SECRET = 'bYrfSMxFGNUWEZ7DUzw3fX9KHY4='
-
 PESAPAL_DEMO = True
 #PESAPAL_DEMO=False
 
 if PESAPAL_DEMO:
     # demo
+    PESAPAL_CONSUMER_KEY = "nxE8AeoNZXU8BkeB+A1jCQqvI0KFt/8V"
+    PESAPAL_CONSUMER_SECRET = "vVV8l9Lm2W1YvqepJpYaeetBqC4="
     PESAPAL_IFRAME_LINK = 'http://demo.pesapal.com/api/PostPesapalDirectOrderV4'
     PESAPAL_QUERY_STATUS_LINK = 'http://demo.pesapal.com/API/QueryPaymentDetails'
 else:
     # production
     PESAPAL_IFRAME_LINK = 'https://www.pesapal.com/api/PostPesapalDirectOrderV4'
     PESAPAL_QUERY_STATUS_LINK =	'https://www.pesapal.com/API/QueryPaymentDetails'
+    PESAPAL_CONSUMER_KEY = 'oGQJZ1Ew1MDw4MSoyYv0mgZVhxSBMXCn'
+    PESAPAL_CONSUMER_SECRET = 'bYrfSMxFGNUWEZ7DUzw3fX9KHY4='
 
-PESAPAL_OAUTH_CALLBACK_URL = 'transaction_completed'
-PESAPAL_OAUTH_SIGNATURE_METHOD = 'SignatureMethod_HMAC_SHA1'
-PESAPAL_TRANSACTION_DEFAULT_REDIRECT_URL = 'events:booked'
-PESAPAL_TRANSACTION_FAILED_REDIRECT_URL	= 'events:book_fail'
-PESAPAL_REDIRECT_WITH_REFERENCE = True
-PESAPAL_TRANSACTION_MODEL = 'django_pesapal.Transaction'
+PESAPAL_CALLBACK = "http://127.0.0.1:8000/booking"
 #=====
 
 # Deplyment
@@ -209,6 +203,6 @@ ALLOWED_HOSTS = [
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-DEBUG = False
+#DEBUG = False
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
