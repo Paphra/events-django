@@ -189,20 +189,24 @@ else:
     PESAPAL_CONSUMER_KEY = 'oGQJZ1Ew1MDw4MSoyYv0mgZVhxSBMXCn'
     PESAPAL_CONSUMER_SECRET = 'bYrfSMxFGNUWEZ7DUzw3fX9KHY4='
 
-PESAPAL_CALLBACK = "http://127.0.0.1:8000/booking"
 #=====
 
 # Deplyment
 #============
 ALLOWED_HOSTS = [
+    'ultimatesports.herokuapp.com',
     '0.0.0.0', 'localhost', 
-    '127.0.0.1', 
-    'ultimatesports.herokuapp.com'
+    '127.0.0.1',
 ]
+
+DEBUG = False
+
+if DEBUG
+    PESAPAL_CALLBACK = "http://127.0.0.1:8000/booking"
+else:
+    PESAPAL_CALLBACK = ALLOWED_HOSTS[0] + "/booking"
 
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-
-DEBUG = False
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
