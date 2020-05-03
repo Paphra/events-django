@@ -201,7 +201,7 @@ ALLOWED_HOSTS = [
 
 DEBUG = False
 
-if DEBUG
+if DEBUG:
     PESAPAL_CALLBACK = "http://127.0.0.1:8000/booking"
 else:
     PESAPAL_CALLBACK = ALLOWED_HOSTS[0] + "/booking"
