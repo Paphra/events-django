@@ -20,7 +20,9 @@
 				<small class="text-muted">{{ event.ends_on}}</small>
 			</div>
 			<div class="col-4">
-				<a class="btn btn-primary" href="{% url 'events:detail' event.slug %}">More</a>
+				<a class="btn btn-primary" href="{% url 'events:detail' event.slug %}">View</a>
+				<a class="btn btn-outline-success {% if event.seats == 0 %}disabled{% endif %}"
+					href="{% url 'events:booking' event.id %}">Book</a>
 			</div>
 		</div>
 	</div>

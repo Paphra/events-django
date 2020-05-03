@@ -24,7 +24,7 @@
 					<h4><i><b>Finished Events</b></i></h4>
 					<hr/>
 					{% if finished %}
-						<div class="row card-columns">
+						<div class="row card-deck">
 							{% for event in finished %}
 								{% include "events/column.html" %}
 							{% endfor %}
